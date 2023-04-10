@@ -7,7 +7,7 @@ export default {
   name: "App",
   data() {
     return {
-      value: "zwlPDA web page"
+      value: "zwlPDA web"
     };
   }
 };
