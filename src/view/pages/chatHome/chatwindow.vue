@@ -108,7 +108,7 @@
 
 <script>
 import { animation } from "@/util/util";
-import { getChatMsg, chatgpt, completion } from "@/api/getData";
+import { getChatMsg, chatgpt, completion, readanswer } from "@/api/getData";
 
 import HeadPortrait from "@/components/HeadPortrait";
 import Emoji from "@/components/Emoji";
@@ -208,7 +208,10 @@ export default {
         this.sendMsg(chatGPT);
         completion(data).then((res) => {
           this.isSend = false;
-          this.chatList[this.chatList.length-1].msg = res.message;
+          //this.chatList[this.chatList.length-1].msg = res.message;
+          readanswer('completion').then((res) => {
+            this.chatList[this.chatList.length-1].msg = res.answer;
+          });
         });
         /*
         let chatMsg = {

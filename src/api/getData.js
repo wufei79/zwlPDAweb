@@ -40,6 +40,20 @@ export const getChatMsg = params => {
       data: params,
       headers: {
         'Content-Type': 'application/json',
+        'charset': 'UTF-8',
+        //'Authorization': `Bearer xxxxx`,
+      }
+    }).then(res => res.data)
+  }
+
+  export const answer = conversationId => {
+    return axios({
+      method: 'get',
+      url: `https://zwlpda.azurewebsites.net/readanswer`,
+      params: conversationId,
+      headers: {
+        'Content-Type': 'application/json',
+        'charset': 'UTF-8',
         //'Authorization': `Bearer xxxxx`,
       }
     }).then(res => res.data)
