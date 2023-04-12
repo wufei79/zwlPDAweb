@@ -214,7 +214,7 @@ export default {
         readanswer('completion').then((res) => {
           this.chatList[this.chatList.length-1].msg = res.answer;
         });  
-        };
+      };
         
         /*
         let chatMsg = {
