@@ -209,11 +209,11 @@ export default {
         completion(data).then((res) => {
           this.isSend = false;
           //this.chatList[this.chatList.length-1].msg = res.message;
-          
+            readanswer('completion').then((res) => {
+              this.chatList[this.chatList.length-1].msg = res.answer;
+              });  
           });
-        readanswer('completion').then((res) => {
-          this.chatList[this.chatList.length-1].msg = res.answer;
-          });  
+        
         
         /*
         let chatMsg = {
