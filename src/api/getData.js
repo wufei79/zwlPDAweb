@@ -49,8 +49,8 @@ export const getChatMsg = params => {
   export const readanswer = conversationId => {
     return axios({
       method: 'get',
-      url: `https://zwlpda.azurewebsites.net/readAnswer`,
-      params: {'conversationId': conversationId},
+      url: `https://zwlpda.azurewebsites.net/readAnswer/${conversationId}`,
+      params: {},
       headers: {
         'Content-Type': 'application/json',
         'charset': 'UTF-8',
