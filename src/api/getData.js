@@ -46,7 +46,7 @@ export const getChatMsg = params => {
     }).then(res => res.data)
   }
 
-  export const answer = conversationId => {
+  export const readanswer = conversationId => {
     return axios({
       method: 'get',
       url: `https://zwlpda.azurewebsites.net/readanswer`,
