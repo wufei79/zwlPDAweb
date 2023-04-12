@@ -211,10 +211,11 @@ export default {
           //this.chatList[this.chatList.length-1].msg = res.message;
           
           });
-        };
         readanswer('completion').then((res) => {
-            this.chatList[this.chatList.length-1].msg = res.answer;
-        });
+          this.chatList[this.chatList.length-1].msg = res.answer;
+        });  
+        };
+        
         /*
         let chatMsg = {
           headImg: require("@/assets/img/head_portrait.jpg"),
