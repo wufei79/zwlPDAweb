@@ -194,7 +194,7 @@ export default {
           question: chatMsg.msg,
           temperature: 0,
           maxTokens: 20
-        }
+        };
         this.loading = true
         this.isSend = true;
         let chatGPT = {
@@ -213,8 +213,7 @@ export default {
           });
         readanswer('completion').then((res) => {
           this.chatList[this.chatList.length-1].msg = res.answer;
-        });  
-      };
+          });  
         
         /*
         let chatMsg = {
