@@ -192,10 +192,10 @@ export default {
         this.inputMsg = "";
         let data = {
           prompt: chatMsg.msg,
-          temperature: 1,
+          temperature: 0,
           top_p: 1,
           model: 'text-davinci-003',
-          max_tokens: 2048,
+          max_tokens: 20,
           frequency_penalty: 0,
           presence_penalty: 0,
           stop: ["Human:", "AI:"]

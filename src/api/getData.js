@@ -28,7 +28,7 @@ export const getChatMsg = params => {
       data: params,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer xxxxx`,
+        //'Authorization': `Bearer xxxxx`,
       }
     }).then(res => res.data)
   }
