@@ -108,7 +108,7 @@
 
 <script>
 import { animation } from "@/util/util";
-import { getChatMsg, chatgpt } from "@/api/getData";
+import { getChatMsg, chatgpt, completion } from "@/api/getData";
 
 import HeadPortrait from "@/components/HeadPortrait";
 import Emoji from "@/components/Emoji";
