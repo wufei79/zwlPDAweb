@@ -191,6 +191,38 @@ export default {
         this.$emit('personCardSort', this.frinedInfo.id)
         this.inputMsg = "";
         let data = {
+          question: chatMsg.msg,
+          temperature: 0,
+          maxTokens: 20
+        }
+        this.loading = true
+        this.isSend = true;
+        let chatGPT = {
+          headImg: require("@/assets/img/head_portrait1.jpg"),
+          name: "凤雏",
+          time: new Date().toLocaleTimeString(),
+          msg: "",
+          chatType: 0, //信息类型，0文字，1图片
+          uid: "1002", //uid
+        };
+        this.sendMsg(chatGPT);
+        completion(data).then((res) => {
+          this.isSend = false;
+          this.chatList[this.chatList.length-1].msg = res.message;
+        });
+        /*
+        let chatMsg = {
+          headImg: require("@/assets/img/head_portrait.jpg"),
+          name: "卧龙",
+          time: new Date().toLocaleTimeString(),
+          msg: this.inputMsg,
+          chatType: 0, //信息类型，0文字，1图片
+          uid: "1001", //uid
+        };
+        this.sendMsg(chatMsg);
+        this.$emit('personCardSort', this.frinedInfo.id)
+        this.inputMsg = "";
+        let data = {
           prompt: chatMsg.msg,
           temperature: 0,
           top_p: 1,
@@ -215,7 +247,7 @@ export default {
           this.isSend = false;
           this.chatList[this.chatList.length-1].msg = res.choices[0].text;
         });
-
+        */
 
       } else {
         this.$message({

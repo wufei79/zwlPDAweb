@@ -32,3 +32,15 @@ export const getChatMsg = params => {
       }
     }).then(res => res.data)
   }
+
+  export const completion = params => {
+    return axios({
+      method: 'post',
+      url: `https://zwlpda.azurewebsites.net/completion/question`,
+      data: params,
+      headers: {
+        'Content-Type': 'application/json',
+        //'Authorization': `Bearer xxxxx`,
+      }
+    }).then(res => res.data)
+  }
