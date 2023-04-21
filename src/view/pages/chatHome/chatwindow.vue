@@ -1,25 +1,8 @@
 <template>
   <div class="chat-window">
     <div class="top">
-      <div class="head-pic">
-        <HeadPortrait :imgUrl="frinedInfo.headImg"></HeadPortrait>
-      </div>
       <div class="info-detail">
-        <div class="name">{{ frinedInfo.name }}</div>
-        <div class="detail">{{ frinedInfo.detail }}</div>
-      </div>
-      <div class="other-fun">
-        <span class="iconfont icon-shipin" @click="video"> </span>
-        <span class="iconfont icon-gf-telephone" @click="telephone"></span>
-        <label for="docFile">
-          <span class="iconfont icon-wenjian"></span>
-        </label>
-        <label for="imgFile">
-          <span class="iconfont icon-tupian"></span>
-        </label>
-        <input type="file" name="" id="imgFile" @change="sendImg" accept="image/*" />
-        <input type="file" name="" id="docFile" @change="sendFile" accept="application/*,text/*" />
-        <!-- accept="application/*" -->
+        <div class="name">{{ conversationId }}</div>
       </div>
     </div>
     <div class="botoom">
@@ -86,7 +69,7 @@
 
         </div>
       </div>
-      <div class="chatInputs">
+      <div>
         <!-- <div class="emoji boxinput" @click="clickEmoji">
           <img src="@/assets/img/emoji/smiling-face.png" alt="" />
         </div> -->
@@ -97,6 +80,11 @@
             @closeEmoji="clickEmoji"
           ></Emoji>
         </div> -->
+        <input class="temperature" v-model="temperature"/>
+        <input class="maxTokens" v-model="maxTokens"/>
+        <input class="conversationId" v-model="conversationId"/>
+        </div>
+        <div class="chatInputs">
         <input class="inputs" v-model="inputMsg" @keyup.enter="sendText" />
         <el-button class="send boxinput" :disabled = "isSend" @click="sendText">
           <img src="@/assets/img/emoji/rocket.png" alt="" />
@@ -108,7 +96,7 @@
 
 <script>
 import { animation } from "@/util/util";
-import { getChatMsg, chatgpt, completion, readanswer } from "@/api/getData";
+import { completion, readanswer } from "@/api/getData";
 
 import HeadPortrait from "@/components/HeadPortrait";
 import Emoji from "@/components/Emoji";
@@ -120,7 +108,8 @@ export default {
     FileCard,
   },
   props: {
-    frinedInfo: Object,
+    frinedInfo: "",
+    conversationId: "",
     default() {
       return {};
     },
@@ -134,8 +123,11 @@ export default {
     return {
       chatList: [],
       inputMsg: "",
+      temperature: 1,
+      maxTokens: 100,
+      //conversationId: "",
       showEmoji: false,
-      friendInfo: {},
+      friendInfo: "",
       srcImgList: [],
       isSend: false
     };
@@ -146,8 +138,9 @@ export default {
   methods: {
     //获取聊天记录
     getFriendChatMsg() {
+      /*
       let params = {
-        frinedId: this.frinedInfo.id,
+        frinedId: this.conversationId,
       };
       getChatMsg(params).then((res) => {
         this.chatList = res;
@@ -159,7 +152,9 @@ export default {
         this.scrollBottom();
 
       });
+      */
     },
+    
     //发送信息
     sendMsg(msgList) {
       this.chatList.push(msgList);
@@ -188,12 +183,13 @@ export default {
           uid: "1001", //uid
         };
         this.sendMsg(chatMsg);
-        this.$emit('personCardSort', this.frinedInfo.id)
+        this.$emit('personCardSort', this.frinedInfo)
         this.inputMsg = "";
         let data = {
+          conversationId: this.conversationId,
           question: chatMsg.msg,
-          temperature: 0,
-          maxTokens: 20
+          temperature: parseFloat(this.temperature),
+          maxTokens: parseInt(this.maxTokens)
         };
         this.loading = true
         this.isSend = true;
@@ -209,7 +205,7 @@ export default {
         completion(data).then((res) => {
           this.isSend = false;
           //this.chatList[this.chatList.length-1].msg = res.message;
-            readanswer('completion').then((res) => {
+            readanswer(this.conversationId).then((res) => {
               this.chatList[this.chatList.length-1].msg = res.answer;
               });  
           });
@@ -401,7 +397,7 @@ export default {
   position: relative;
 
   .top {
-    margin-bottom: 50px;
+    margin-bottom: 10px;
 
     &::after {
       content: "";
@@ -461,7 +457,7 @@ export default {
       width: 100%;
       height: 85%;
       overflow-y: scroll;
-      padding: 20px;
+      padding: 10px;
       box-sizing: border-box;
 
       &::-webkit-scrollbar {
@@ -488,7 +484,7 @@ export default {
 
           .chat-text {
             max-width: 90%;
-            padding: 20px;
+            padding: 10px;
             border-radius: 20px 20px 20px 5px;
             background-color: rgb(56, 60, 75);
             color: #fff;
@@ -642,6 +638,30 @@ export default {
         &:focus {
           outline: none;
         }
+      }
+
+      .temperature {
+        width: 20px;
+        height: 50px;
+        background-color: rgb(66, 70, 86);
+        border: 2px solid rgb(34, 135, 225);
+        color: #fff;
+      }
+
+      .maxTokens {
+        width: 40px;
+        height: 50px;
+        background-color: rgb(66, 70, 86);
+        border: 2px solid rgb(34, 135, 225);
+        color: #fff;
+      }
+
+      .conversationId {
+        width: 50px;
+        height: 50px;
+        background-color: rgb(66, 70, 86);
+        border: 2px solid rgb(34, 135, 225);
+        color: #fff;
       }
 
       .send {

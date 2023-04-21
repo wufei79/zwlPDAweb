@@ -1,9 +1,11 @@
 <template>
   <div class="home">
     <el-container height="100%">
+    <!--
       <el-aside width="100px">
         <Nav></Nav>
       </el-aside>
+    -->
       <el-main>
         <router-view></router-view>
       </el-main>

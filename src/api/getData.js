@@ -2,6 +2,14 @@ import base from './index'
 let axios = base.axios
 let baseUrl = base.baseUrl
 
+export const getConversationList = params => {
+  return axios({
+    method: 'get',
+    url: `https://zwlpda.azurewebsites.net/getConversationList`
+  }).then(res => res.data.answer)
+}
+
+
 // 获取好友
 export const getFriend = params => {
     return axios({
@@ -20,23 +28,11 @@ export const getChatMsg = params => {
   }).then(res => res.data)
 }
 
-  // 获取聊天信息
-  export const chatgpt = params => {
-    return axios({
-      method: 'post',
-      url: `https://api.openai.com/v1/completions`,
-      data: params,
-      headers: {
-        'Content-Type': 'application/json',
-        //'Authorization': `Bearer xxxxx`,
-      }
-    }).then(res => res.data)
-  }
 
   export const completion = params => {
     return axios({
       method: 'post',
-      url: `https://zwlpda.azurewebsites.net/completion/question`,
+      url: `https://zwlpda.azurewebsites.net/chat/question`,
       data: params,
       headers: {
         'Content-Type': 'application/json',

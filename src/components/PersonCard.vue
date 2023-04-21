@@ -1,10 +1,8 @@
 <template>
-  <div class="person-card" :class="{ activeCard: personInfo.id == current }">
+  <div class="person-card" :class="{  }">
     <div class="info">
-          <HeadPortrait :imgUrl="personInfo.headImg"></HeadPortrait>
           <div class="info-detail">
-            <div class="name">{{ personInfo.name }}</div>
-            <div class="detail">{{ personInfo.detail }}</div>
+            <div class="conversationId">{{ conversationId }}</div>
           </div>
 
     </div>
@@ -12,34 +10,20 @@
 </template>
 
 <script>
-import HeadPortrait from "./HeadPortrait.vue";
-
 export default {
   props: {
-    personInfo: {
-      default: {
-      },
-    },
-    pcCurrent: {
+    conversationId: {
       default: ''
     }
   },
-  components: {
-    HeadPortrait,
-  },
   data() {
     return {
-      current: '',
-    }
-  },
-  watch: {
-    pcCurrent: function() {
-      this.isActive()
+      //conversationId: '',
     }
   },
   methods: {
     isActive() {
-      this.current = this.pcCurrent
+      this.conversationId = this.conversationId
     }
   }
 };
@@ -48,11 +32,11 @@ export default {
 <style lang="scss" scoped>
 .person-card {
   width: 250px;
-  height: 80px;
-  border-radius: 10px;
+  height: 40px;
+  border-radius: 5px;
   background-color: rgb(50, 54, 68);
   position: relative;
-  margin: 25px 0;
+  margin: 0px 0;
   cursor: pointer;
   .info {
     position: absolute;
@@ -63,9 +47,9 @@ export default {
     overflow: hidden;
     display: flex;
     .info-detail {
-      margin-top: 5px;
-      margin-left: 20px;
-      .name {
+      margin-top: 1px;
+      margin-left: 0px;
+      .conversationId {
         color: #fff;
         overflow: hidden;
         white-space: nowrap;
@@ -77,7 +61,7 @@ export default {
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        font-size: 12px;
+        font-size: 9px;
       }
     }
   }

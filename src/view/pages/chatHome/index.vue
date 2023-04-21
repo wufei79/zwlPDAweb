@@ -2,8 +2,7 @@
   <div class="chatHome">
     <div class="chatLeft">
       <div class="title">
-        <h1>Chat-大聪明</h1>
-        <el-tag type="success">Designed By 柴宁</el-tag>
+        <h1>myPDA</h1>
         <br/>
       </div>
       <div class="online-person">
@@ -11,13 +10,11 @@
         <div class="person-cards-wrapper">
           <div
             class="personList"
-            v-for="personInfo in personList"
-            :key="personInfo.id"
-            @click="clickPerson(personInfo)"
+            v-for="conversationId in personList"
+            @click="clickPerson(conversationId)"
           >
             <PersonCard
-              :personInfo="personInfo"
-              :pcCurrent="pcCurrent"
+              :conversationId="conversationId"
             ></PersonCard>
           </div>
         </div>
@@ -27,13 +24,8 @@
       <!-- <router-view></router-view> -->
       <div v-if="showChatWindow">
         <ChatWindow
-          :frinedInfo="chatWindowInfo"
-          @personCardSort="personCardSort"
+        :conversationId="conversationId"
         ></ChatWindow>
-      </div>
-      <div class="showIcon" v-else>
-        <span class="iconfont icon-snapchat"></span>
-        <!-- <img src="@/assets/img/snapchat.png" alt="" /> -->
       </div>
     </div>
     <!-- <el-col :span="4"><div class="grid-content bg-purple"></div></el-col> -->
@@ -44,7 +36,7 @@
 import PersonCard from "@/components/PersonCard.vue";
 import ChatWindow from "./chatwindow.vue";
 
-import { getFriend } from "@/api/getData";
+import { getFriend, getConversationList } from "@/api/getData";
 export default {
   name: "App",
   components: {
@@ -53,25 +45,32 @@ export default {
   },
   data() {
     return {
-      pcCurrent: "",
       personList: [],
       showChatWindow: false,
-      chatWindowInfo: {},
+      conversationId: "",
     };
   },
   mounted() {
+    getConversationList().then((res) => {
+      console.log(res);
+      this.personList = res;
+    });
+    /*
     getFriend().then((res) => {
       console.log(res);
       this.personList = res;
     });
+    */
   },
   methods: {
-    clickPerson(info) {
+    clickPerson(conversationId) {
       this.showChatWindow = true;
-      this.chatWindowInfo = info;
-      this.personInfo = info;
-      this.pcCurrent = info.id;
+      this.chatWindowInfo = conversationId;
+      this.personInfo = conversationId;
+      this.conversationId = conversationId;
+      //this.pcCurrent = info.id;
     },
+    /*
     personCardSort(id) {
       if (id !== this.personList[0].id) {
         console.log(id);
@@ -86,6 +85,7 @@ export default {
         this.personList.unshift(nowPersonInfo);
       }
     },
+    */
   },
 };
 </script>
@@ -95,7 +95,7 @@ export default {
   // margin-top: 20px;
   display: flex;
   .chatLeft {
-    width: 280px;
+    width: 150px;
     .title {
       color: #fff;
       padding-left: 10px;
