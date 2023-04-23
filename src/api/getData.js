@@ -9,27 +9,34 @@ export const getConversationList = params => {
   }).then(res => res.data.answer)
 }
 
-
-// 获取好友
-export const getFriend = params => {
-    return axios({
-      method: 'post',
-      baseURL: `${baseUrl}/friend/friendList`,
-      data: params
-    }).then(res => res.data)
-  }
-
   // 获取聊天信息
-export const getChatMsg = params => {
+export const getHistories = conversationId => {
   return axios({
-    method: 'post',
-    baseURL: `${baseUrl}/friend/chatMsg`,
-    data: params
+    method: 'get',
+      url: `https://zwlpda.azurewebsites.net/getHistories/${conversationId}`,
+      params: {},
+      headers: {
+        'Content-Type': 'application/json',
+        'charset': 'UTF-8',
+        //'Authorization': `Bearer xxxxx`,
+      }
   }).then(res => res.data)
 }
 
+export const updateHistory = params => {
+  return axios({
+    method: 'post',
+    url: `https://zwlpda.azurewebsites.net/updateHistory`,
+    data: params,
+    headers: {
+      'Content-Type': 'application/json',
+      'charset': 'UTF-8',
+      //'Authorization': `Bearer xxxxx`,
+    }
+  }).then(res => res.data)
+}
 
-  export const completion = params => {
+  export const chat = params => {
     return axios({
       method: 'post',
       url: `https://zwlpda.azurewebsites.net/chat/question`,

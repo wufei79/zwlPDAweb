@@ -113,31 +113,38 @@
         class="form"
         :inline="false"
       >
-        <el-form-item label="" prop="temperature">
+        <el-form-item label="temperature" prop="temperature">
           <el-input v-model="chatData.temperature" clearable></el-input>
         </el-form-item>
-        <el-form-item label="" prop="maxTokens">
+        <el-form-item label="maxTokens" prop="maxTokens">
           <el-input
             v-model="chatData.maxTokens"
             placeholder=""
             clearable
           ></el-input>
         </el-form-item>
-        <el-form-item label="" prop="conversationId">
+        <el-form-item label="conversation" prop="conversationId">
           <el-select
             v-model="chatData.conversationId"
             allow-create
             clearable
             filterable
-            @change="changePerson(chatData.conversationId)"
+            @change="changeConversation(chatData.conversationId)"
           >
             <el-option
-              v-for="(item, index) in personList"
-              :key="`${index}+'personList'`"
+              v-for="(item, index) in conversationList"
+              :key="`${index}+'conversationList'`"
               :value="item"
               :label="item"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="length" prop="conversationLength">
+          <el-input
+            v-model="chatData.conversationLength"
+            placeholder=""
+            clearable
+          ></el-input>
         </el-form-item>
       </el-form>
       <!-- </div> -->
@@ -153,12 +160,11 @@
 
 <script>
 import { animation } from "@/util/util";
-import { completion, readanswer } from "@/api/getData";
+import { chat, readanswer,getConversationList,getHistories } from "@/api/getData";
 
 import HeadPortrait from "@/components/HeadPortrait";
 import Emoji from "@/components/Emoji";
 import FileCard from "@/components/FileCard.vue";
-import { getConversationList } from "@/api/getData";
 
 export default {
   components: {
@@ -174,9 +180,11 @@ export default {
   //   },
   // },
   watch: {
+    /*
     frinedInfo() {
       this.getFriendChatMsg();
     },
+    */
   },
   data() {
     return {
@@ -185,55 +193,78 @@ export default {
         temperature: "1",
         maxTokens: "100",
         conversationId: "",
+        conversationLength:"5",
       },
-      personList: [], //人员列表
+      conversationList: [], //人员列表
       inputMsg: "",
       // temperature: 1,
       // maxTokens: 100,
       //conversationId: "",
-      showEmoji: false,
-      friendInfo: "",
-      srcImgList: [],
+      //showEmoji: false,
+      //friendInfo: "",
+      //srcImgList: [],
       isSend: false,
     };
   },
   created() {
-    this.getPersonList();
+    this.getList();
   },
    mounted() {
     //this.getPersonList();
    },
   methods: {
     // 获取人员列表
-    getPersonList() {
+    getList() {
       getConversationList().then((res) => {
         console.log(res);
-        this.personList = res;
+        this.conversationList = res;
       });
     },
     // 点击人员列表下拉框
-    changePerson(val){
+    changeConversation(val){
       //this.getFriendChatMsg(val)
+      console.log(val);
+      this.getChatHistories(val);
     },
     
     //获取聊天记录
-    getFriendChatMsg(val) {
-      let params = {
-        // frinedId: this.conversationId,
-        frinedId: val,
-      };
-      getChatMsg(params).then((res) => {
-        this.chatList = res;
-        this.chatList.forEach((item) => {
+    getChatHistories(val) {
+      getHistories(val).then((res) => {
+        //this.chatList = res;
+        //console.log(res);
+        this.chatList=[];
+        res.answer.forEach((item) => {
+          /*
           if (item.chatType == 2 && item.extend.imgType == 2) {
             this.srcImgList.push(item.msg);
           }
+          */
+          let question = {
+            headImg: require("@/assets/img/head_portrait.jpg"),
+            name: "me",
+            time: item.date_time,
+            msg: item.question,
+            chatType: 0, //信息类型，0文字，1图片
+            uid: "1001", //uid
+          };
+          this.sendMsg(question);
+
+          let answer = {
+            headImg: require("@/assets/img/head_portrait1.jpg"),
+            name: "chat",
+            time: item.date_time,
+            msg: item.answer,
+            chatType: 0, //信息类型，0文字，1图片
+            uid: "1002", //uid
+          };
+          this.sendMsg(answer);
         });
         this.scrollBottom();
       });
     },
 
     //发送信息
+    
     sendMsg(msgList) {
       if (this.chatData.conversationId == "") {
         this.$message.error("请先选择人员");
@@ -242,6 +273,7 @@ export default {
         this.scrollBottom();
       }
     },
+    
     //获取窗口高度并滚动至最底层
     scrollBottom() {
       this.$nextTick(() => {
@@ -250,18 +282,20 @@ export default {
       });
     },
     //关闭标签框
+    /*
     clickEmoji() {
       this.showEmoji = !this.showEmoji;
     },
+    */
     //发送文字信息
     sendText() {
       if (this.chatData.conversationId == "") {
-        this.$message.error("请先选择人员");
+        this.$message.error("请先选择会话");
       } else {
         if (this.inputMsg) {
           let chatMsg = {
             headImg: require("@/assets/img/head_portrait.jpg"),
-            name: "卧龙",
+            name: "me",
             time: new Date().toLocaleTimeString(),
             msg: this.inputMsg,
             chatType: 0, //信息类型，0文字，1图片
@@ -283,14 +317,14 @@ export default {
           this.isSend = true;
           let chatGPT = {
             headImg: require("@/assets/img/head_portrait1.jpg"),
-            name: "凤雏",
+            name: "chat",
             time: new Date().toLocaleTimeString(),
             msg: "",
             chatType: 0, //信息类型，0文字，1图片
             uid: "1002", //uid
           };
           this.sendMsg(chatGPT);
-          completion(data).then((res) => {
+          chat(data).then((res) => {
             this.isSend = false;
             //this.chatList[this.chatList.length-1].msg = res.message;
             readanswer(this.chatData.conversationId).then((res) => {
@@ -344,6 +378,7 @@ export default {
       }
     },
     //发送表情
+    /*
     sendEmoji(msg) {
       let chatMsg = {
         headImg: require("@/assets/img/head_portrait.jpg"),
@@ -440,6 +475,7 @@ export default {
     video() {
       this.$message("该功能还没有开发哦，敬请期待一下吧~🥳");
     },
+    */
   },
 };
 </script>
@@ -768,7 +804,7 @@ export default {
     position: absolute;
     bottom: 9vh;
     margin-left: 5%;
-    height: 5vh;
+    height: 10vh;
   }
 }
 ::v-deep .el-input__inner {
